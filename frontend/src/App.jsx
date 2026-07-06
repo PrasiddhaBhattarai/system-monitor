@@ -7,9 +7,9 @@ function formatBytes(bytes) {
 
 function MetricCard({ title, percent, details }) {
   const getColor = (pct) => {
-    if (pct > 80) return "#e74c3c";
-    if (pct > 60) return "#f39c12";
-    return "#2ecc71";
+    if (pct > 80) return "#d32f2f";
+    if (pct > 60) return "#f59e0b";
+    return "#038e43";
   };
 
   return (
@@ -53,8 +53,6 @@ function App() {
     };
 
     fetchStats();
-    const interval = setInterval(fetchStats, 2000);
-    return () => clearInterval(interval);
   }, []);
 
   if (error) {

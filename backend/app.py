@@ -8,7 +8,7 @@ CORS(app)
 
 @app.route("/api/stats")
 def stats():
-    cpu_percent = psutil.cpu_percent(interval=0.5)
+    cpu_percent = psutil.cpu_percent(interval=None)
     memory = psutil.virtual_memory()
     disk = psutil.disk_usage("/")
 

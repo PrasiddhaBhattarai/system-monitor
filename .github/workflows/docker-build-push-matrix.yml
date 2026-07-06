@@ -2,8 +2,8 @@ name: Matrix strategy Docker build and push pipeline
 
 on:
   push:
-    brances: [master]
-  pull_requests:
+    branches: [master]
+  pull_request:
     branches: [master]
   workflow_dispatch:
 
@@ -17,11 +17,11 @@ jobs:
         include:
           - name: frontend
             context: ./frontend
-            Dockerfile: ./frontend/Dockerfile
+            dockerfile: ./frontend/Dockerfile
             image: nginx-frontend
 
           - name: backend
-            con: ./backend
+            context: ./backend
             dockerfile: ./backend/Dockerfile
             image: backend 
     
@@ -55,7 +55,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_COLOR: good
           SLACK_TITLE: Success
-          SLACK_MESSAGE: "Succesfully Built and Pushed Docker image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}:${{ github.run_number }}"
+          SLACK_MESSAGE: "Successfully Built and Pushed Docker image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}:${{ github.run_number }}"
 
       - name: Slack Notification
         if: failure()
@@ -64,4 +64,4 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_COLOR: danger
           SLACK_TITLE: failure
-          SLACK_MESSAGE: "Failled to Build and Push docker image"
+          SLACK_MESSAGE: "Failed to Build and Push docker image"

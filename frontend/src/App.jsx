@@ -42,7 +42,11 @@ function App() {
     const fetchStats = async () => {
       try {
         const apiUrl = process.env.REACT_APP_API_URL || "";
-        const res = await fetch(`${apiUrl}/api/stats`);
+        const res = await fetch(`${apiUrl}/api/stats`, {
+          headers: {
+            "X-API-Key": "my-secret"
+          }
+        });
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
         setStats(data);

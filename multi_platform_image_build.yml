@@ -1,0 +1,46 @@
+# DISCLAIMER:
+# this file is only for information
+# don't run this file as it won't work
+
+# QEMU
+#
+# QEMU is what allows Docker to build images for CPU architectures other than the one the GitHub runner is using.
+#
+# If your runner is running linux/amd64 but you are building for linux/arm64 too, 
+# suppose your Dockerfile contains: 
+    # FROM ubuntu:24.04
+    # RUN apt-get update && apt-get install -y curl
+# Docker may need to run ARM64 binaries during the RUN commands. Since the GitHub runner is actually an x86 machine, QEMU emulates an ARM64 CPU so those commands can execute.
+#
+# Without QEMU, you would typically see errors like: exec format error
+
+name: ci
+
+on:
+  push:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Set up QEMU – install emulation support for other CPU architectures.
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: user/app:latest
